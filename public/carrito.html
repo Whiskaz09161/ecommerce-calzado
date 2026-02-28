@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Resumen de Compra - ZapaStore</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card shadow">
+                    <div class="card-header bg-dark text-white">
+                        <h4>🛒 Tu Carrito de Compras</h4>
+                    </div>
+                    <div class="card-body">
+                        <ul id="lista-carrito" class="list-group mb-3">
+                            </ul>
+                        <div class="d-flex justify-content-between">
+                            <h5>Total a pagar:</h5>
+                            <h5 id="total-precio">$0</h5>
+                        </div>
+                        <hr>
+                        <p class="text-muted"><strong>Método de Pago:</strong> Contraentrega (Simulado)</p>
+                        <button class="btn btn-success btn-lg w-100" onclick="finalizarCompra()">
+                            Confirmar Pedido
+                        </button>
+                        <a href="catalogo.html" class="btn btn-link w-100 mt-2">Seguir Comprando</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+        const lista = document.getElementById('lista-carrito');
+        const totalTxt = document.getElementById('total-precio');
+
+        function mostrarCarrito() {
+            lista.innerHTML = '';
+            let total = 0;
+            carrito.forEach((p, index) => {
+                total += parseFloat(p.precio);
+                lista.innerHTML += `
+                    <li class="list-group-item d-flex justify-content-between">
+                        ${p.nombre} - ${p.categoria}
+                        <span>$${parseFloat(p.precio).toLocaleString()}</span>
+                    </li>`;
+            });
+            totalTxt.innerText = `$${total.toLocaleString()}`;
+        }
+
+        async function finalizarCompra() {
+            if (carrito.length === 0) return alert("El carrito está vacío");
+
+            const total = carrito.reduce((acc, p) => acc + parseFloat(p.precio), 0);
+            
+            // Enviamos al backend (API) para procesar con Patrón Strategy
+            const response = await fetch('/api/checkout', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    usuarioId: 1, // Usuario de prueba
+                    totalCarrito: total,
+                    productos: carrito
+                })
+            });
+
+            const resultado = await response.json();
+            if (response.ok) {
+                alert("¡Compra Exitosa! Método: " + resultado.pago.metodo);
+                localStorage.removeItem('carrito');
+                window.location.href = 'catalogo.html';
+            }
+        }
+
+        mostrarCarrito();
+    </script>
+</body>
+</html>
