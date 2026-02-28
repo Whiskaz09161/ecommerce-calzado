@@ -14,3 +14,8 @@ Prototipo funcional de una tienda virtual de calzado desarrollado para la asigna
 
 ## 📦 Despliegue
 El proyecto se encuentra desplegado en **Vercel** cumpliendo con los requisitos de alta disponibilidad y tiempos de respuesta menores a 3 segundos.
+
+## 🚀 Acceso al Prototipo
+Para visualizar el proyecto correctamente en el despliegue de Vercel, por favor ingresar a la siguiente ruta:
+- **Enlace:** https://ecommerce-calzado.vercel.app/catalogo.html)
+*(Nota: El archivo principal se mantiene como catalogo.html por requerimientos de la estructura de la Unidad 3).*
